@@ -133,6 +133,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Replace with your React project's URL
+    'https://ngcivilarchitects.netlify.app',
+    'https://ngcivilarchitects.com',
+    'http://localhost:5173',
+
 ]
 # add this line for react data fetch
 
