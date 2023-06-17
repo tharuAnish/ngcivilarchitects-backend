@@ -79,7 +79,7 @@ class Team(models.Model):
     staff_name = models.CharField(max_length=400)
     staff_pos = models.CharField(max_length=200, null=True)
     staff_desc = RichTextField()
-    staff_pic = models.ImageField(upload_to="media/serviceimage", null=True)
+    staff_pic = models.ImageField(upload_to="media/teamimage", null=True)
     is_active = models.BooleanField(default=True)
     staff_rank = models.IntegerField(default=0)
 
