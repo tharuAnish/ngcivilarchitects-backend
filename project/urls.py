@@ -33,6 +33,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
     # path('page/', views.page_view, name='page'),
-    path("api/service/", serviceApiView.as_view()),
+    # path("api/service/", serviceApiView.as_view()),
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

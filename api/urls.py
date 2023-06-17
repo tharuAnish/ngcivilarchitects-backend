@@ -6,5 +6,6 @@ urlpatterns = [
     path('', home),
     path("api/services/", serviceApiView.as_view()),
     path("api/testimonials/", testimonialApiView.as_view()),
+    path("api/team/", teamApiView.as_view()),
   
 ]
