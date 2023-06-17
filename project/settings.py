@@ -142,8 +142,8 @@ CORS_ALLOWED_ORIGINS = [
 
 JAZZMIN_SETTINGS = {
     "site_title": "NG-Group",
-    "site_header": "NG-CIVIL&ARCHITECTS",
-    "site_brand": "NG-CIVIL&ARCHITECTS",
+    "site_header": "NG-Group",
+    "site_brand": "NG-Group",
     "site_icon": "images/favicon.png",
     # Add your own branding here
     "site_logo": None,
@@ -157,7 +157,7 @@ JAZZMIN_SETTINGS = {
     # Links to put along the top menu
     "topmenu_links": [
         # Url that gets reversed (Permissions can be added)
-        {"name": "ENVISION CRM", "url": "home", "permissions": ["auth.view_user"]},
+        {"name": "NG-Group", "url": "home", "permissions": ["auth.view_user"]},
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},
     ],

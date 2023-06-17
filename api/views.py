@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .serializers import serviceSerializer,testimonialSerializer
-from .models import Services,Testimonials
+from .serializers import serviceSerializer,testimonialSerializer,teamSerializer
+from .models import Services,Testimonials,Team
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -61,13 +61,39 @@ class testimonialApiView(APIView):
     def post(self, request):
         data = request.data
         context = {}
-        form = serviceSerializer(data=data)
+        form = testimonialSerializer(data=data)
         if not form.is_valid():
             return Response({'error': True, 'errors': form.errors},
                             status=status.HTTP_400_BAD_REQUEST)
         else:
             form.save()
             context["testimonials"] = form.data
+            return Response(context, status=status.HTTP_200_OK)
+        
+# Team
+class teamApiView(APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request):
+        
+        testm = Team.objects.all()
+        context = {}
+        if len(testm) > 0:
+            context["team"] = teamSerializer(testm,many=True).data
+        else:
+            context["team"] = "Service not found"
+        return Response(context, status=status.HTTP_200_OK)
+        
+        
+    def post(self, request):
+        data = request.data
+        context = {}
+        form = teamSerializer(data=data)
+        if not form.is_valid():
+            return Response({'error': True, 'errors': form.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            form.save()
+            context["team"] = form.data
             return Response(context, status=status.HTTP_200_OK)
 
     # def patch(self,request):
