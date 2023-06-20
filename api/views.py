@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer
-from .models import Services,Testimonials,Team,Project
+from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer,blogSerializer
+from .models import Services, Testimonials, Team, Project, Blog
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -120,6 +120,39 @@ class projectApiView(APIView):
         else:
             form.save()
             context["project"] = form.data
+            return Response(context, status=status.HTTP_200_OK)
+        
+# Blog
+class blogApiView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, blog_id=None):
+        if blog_id is not None:
+            try:
+                blog = Blog.objects.get(id=blog_id)
+                context = {
+                    "blog": blogSerializer(blog).data
+                }
+                return Response(context, status=status.HTTP_200_OK)
+            except Blog.DoesNotExist:
+                return Response({"error": "Blog not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        blogs = Blog.objects.all()
+        context = {
+            "blog": blogSerializer(blogs, many=True).data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+        form = blogSerializer(data=data)
+        if not form.is_valid():
+            return Response({'error': True, 'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            form.save()
+            context = {
+                "blog": form.data
+            }
             return Response(context, status=status.HTTP_200_OK)
 
     # def patch(self,request):

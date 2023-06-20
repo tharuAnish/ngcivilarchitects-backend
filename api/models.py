@@ -3,6 +3,7 @@ from ckeditor.fields import RichTextField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 from PIL import Image
+from django.utils import timezone
 
 # Helper function to resize and optimize images
 def optimize_image(image_field, new_height):
@@ -116,5 +117,26 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         if self.p_pic:
             self.p_pic = optimize_image(self.p_pic, 350)
+
+        super().save(*args, **kwargs)
+
+# Blog
+class Blog(models.Model):
+    b_name = models.CharField(max_length=400)
+    b_type = models.CharField(max_length=200, null=True)
+    b_rank = models.IntegerField(default=0)
+    b_pic = models.ImageField(upload_to="media/blogimage", null=True)
+    b_desc = RichTextField()
+    b_tag1 = models.CharField(max_length=200)  
+    b_tag2 = models.CharField(max_length=200)  
+    b_tag3 = models.CharField(max_length=200, null=True, blank=True) 
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.b_name
+
+    def save(self, *args, **kwargs):
+        if self.b_pic:
+            self.b_pic = optimize_image(self.b_pic, 500)
 
         super().save(*args, **kwargs)
