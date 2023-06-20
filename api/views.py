@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .serializers import serviceSerializer,testimonialSerializer,teamSerializer
-from .models import Services,Testimonials,Team
+from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer
+from .models import Services,Testimonials,Team,Project
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -80,7 +80,7 @@ class teamApiView(APIView):
         if len(testm) > 0:
             context["team"] = teamSerializer(testm,many=True).data
         else:
-            context["team"] = "Service not found"
+            context["team"] = "Team not found"
         return Response(context, status=status.HTTP_200_OK)
         
         
@@ -94,6 +94,32 @@ class teamApiView(APIView):
         else:
             form.save()
             context["team"] = form.data
+            return Response(context, status=status.HTTP_200_OK)
+        
+# Project
+class projectApiView(APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request):
+        
+        testm = Project.objects.all()
+        context = {}
+        if len(testm) > 0:
+            context["project"] = projectSerializer(testm,many=True).data
+        else:
+            context["project"] = "Project not found"
+        return Response(context, status=status.HTTP_200_OK)
+        
+        
+    def post(self, request):
+        data = request.data
+        context = {}
+        form = projectSerializer(data=data)
+        if not form.is_valid():
+            return Response({'error': True, 'errors': form.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            form.save()
+            context["project"] = form.data
             return Response(context, status=status.HTTP_200_OK)
 
     # def patch(self,request):

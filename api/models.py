@@ -42,17 +42,17 @@ def optimize_image(image_field, new_height):
 # Services
 class Services(models.Model):
     s_name = models.CharField(max_length=400)
-    s_desc = RichTextField()
     s_pic = models.ImageField(upload_to="media/serviceimage", null=True)
-    is_active = models.BooleanField(default=True)
     s_rank = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    s_desc = RichTextField()
 
     def __str__(self):
         return self.s_name
 
     def save(self, *args, **kwargs):
         if self.s_pic:
-            self.s_pic = optimize_image(self.s_pic, 400)
+            self.s_pic = optimize_image(self.s_pic, 350)
 
         super().save(*args, **kwargs)
 
@@ -60,9 +60,9 @@ class Services(models.Model):
 # Testimonials
 class Testimonials(models.Model):
     client_name = models.CharField(max_length=400)
-    client_pos = models.CharField(max_length=200, null=True)
-    client_desc = RichTextField()
+    client_pos = models.CharField(max_length=200, null=True, blank=True)
     client_pic = models.ImageField(upload_to="media/testimonialsimage", null=True)
+    client_desc = RichTextField()
 
     def __str__(self):
         return self.client_name
@@ -78,16 +78,43 @@ class Testimonials(models.Model):
 class Team(models.Model):
     staff_name = models.CharField(max_length=400)
     staff_pos = models.CharField(max_length=200, null=True)
-    staff_desc = RichTextField()
-    staff_pic = models.ImageField(upload_to="media/teamimage", null=True)
-    is_active = models.BooleanField(default=True)
     staff_rank = models.IntegerField(default=0)
+    is_md = models.BooleanField(default=False)
+    staff_pic = models.ImageField(upload_to="media/teamimage", null=True)
+    staff_desc = RichTextField()
+    gmail = models.EmailField(null=True, blank=True)
+    linkedin = models.URLField(max_length=200, null=True, blank=True)
+    twitter = models.URLField(max_length=200, null=True, blank=True)
+    facebook = models.URLField(max_length=200, null=True, blank=True)
+    instagram = models.URLField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.staff_name
 
     def save(self, *args, **kwargs):
         if self.staff_pic:
-            self.staff_pic = optimize_image(self.staff_pic, 400)
+            self.staff_pic = optimize_image(self.staff_pic, 350)
+
+        super().save(*args, **kwargs)
+
+
+# Project
+class Project(models.Model):
+    p_name = models.CharField(max_length=400)
+    p_type = models.CharField(max_length=200, null=True)
+    is_active = models.BooleanField(default=True)
+    p_rank = models.IntegerField(default=0)
+    p_pic = models.ImageField(upload_to="media/projectimage", null=True)
+    p_desc = RichTextField()
+    p_point1 = models.CharField(max_length=200)  
+    p_point2 = models.CharField(max_length=200)  
+    p_point3 = models.CharField(max_length=200, null=True, blank=True) 
+
+    def __str__(self):
+        return self.p_name
+
+    def save(self, *args, **kwargs):
+        if self.p_pic:
+            self.p_pic = optimize_image(self.p_pic, 350)
 
         super().save(*args, **kwargs)
