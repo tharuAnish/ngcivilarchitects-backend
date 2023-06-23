@@ -3,6 +3,7 @@ from django.urls import path
 from .views import *
 from . import views
 
+
 urlpatterns = [
     path('', home),
     path("api/services/", serviceApiView.as_view()),
@@ -12,6 +13,9 @@ urlpatterns = [
     path("api/blog/", blogApiView.as_view()),
     # Endpoint for fetching a specific blog by ID
     path("api/blog/<int:blog_id>/", blogApiView.as_view(), name="blog-detail"),
+    path('api/contact/', contact, name='contact'),
+    # path('api/contact/', contactApiView.as_view(), name='contact'),
+    
 
   
 ]
