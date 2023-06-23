@@ -1,12 +1,34 @@
 from django.shortcuts import render
 
-from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer,blogSerializer
+from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer,blogSerializer, contactSerializer
 from .models import Services, Testimonials, Team, Project, Blog
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view
+from django.core.mail import EmailMessage
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
+import threading
+
 # Create your views here.
+
+class datathread(threading.Thread):
+    def __init__(self, data):
+        self.data = data
+        threading.Thread.__init__(self)
+
+    def run(self):
+        try:
+            self.data.send()
+        except Exception as e:
+            print(e)
+            pass
 
 
 def home(request):
@@ -154,6 +176,42 @@ class blogApiView(APIView):
                 "blog": form.data
             }
             return Response(context, status=status.HTTP_200_OK)
+        
+# Contact or email from user
+@api_view(['POST'])
+def contact(request):
+    if request.method == 'POST':
+        serializer = contactSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'error': True, 'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Save the contact details to the database
+            contact = serializer.save()
+           
+            msg1="NG-CivilArchitects."
+            html_content = render_to_string("email.html",{'user':contact.name,'email':contact.email,'phone':contact.phone_number,'desc':contact.query_description})
+            text_content = strip_tags(html_content)
+            email = EmailMultiAlternatives(
+                    msg1,
+                     text_content,
+                    settings.EMAIL_HOST_USER,
+                    ['namoanishtharu@gmail.com','testmail7615@gmail.com',contact.email]
+                    )
+            print('Sending Email')
+            email.attach_alternative(html_content, "text/html")
+            datathread(email).start()
+           
+            return Response({'message': 'Thank you for contacting us! We will get back to you soon.'})
+
+    return Response({'error': 'Invalid form data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
 
     # def patch(self,request):
     #     try:

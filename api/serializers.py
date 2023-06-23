@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Services, Testimonials, Team, Project, Blog
+from .models import Services, Testimonials, Team, Project, Blog, Contact
 
 
 class serviceSerializer(serializers.ModelSerializer):
@@ -27,3 +27,8 @@ class blogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = '__all__'
+
+class contactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ['name', 'email', 'phone_number', 'query_description']
