@@ -4,6 +4,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 from PIL import Image
 from django.utils import timezone
+from datetime import datetime
 
 # Helper function to resize and optimize images
 def optimize_image(image_field, new_height):
@@ -105,7 +106,9 @@ class Project(models.Model):
     p_type = models.CharField(max_length=200, null=True)
     is_active = models.BooleanField(default=True)
     p_rank = models.IntegerField(default=0)
-    p_pic = models.ImageField(upload_to="media/projectimage", null=True)
+    p_pic = models.ImageField(upload_to="media/projectimage")
+    tags = models.CharField(max_length=50,  help_text="Comma-separated tags", null=True)
+    timestamp = models.DateTimeField(default=timezone.now)
     p_desc = RichTextField()
     p_point1 = models.CharField(max_length=200)  
     p_point2 = models.CharField(max_length=200)  
@@ -116,7 +119,7 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         if self.p_pic:
-            self.p_pic = optimize_image(self.p_pic, 350)
+            self.p_pic = optimize_image(self.p_pic, 500)
 
         super().save(*args, **kwargs)
 
@@ -127,19 +130,28 @@ class Blog(models.Model):
     b_rank = models.IntegerField(default=0)
     b_pic = models.ImageField(upload_to="media/blogimage", null=True)
     b_desc = RichTextField()
-    b_tag1 = models.CharField(max_length=200)  
-    b_tag2 = models.CharField(max_length=200)  
-    b_tag3 = models.CharField(max_length=200, null=True, blank=True) 
-    timestamp = models.DateTimeField(default=timezone.now)
+    short_desc = models.CharField(max_length=160, null=True)
+    tags = models.CharField(max_length=50,  help_text="Comma-separated tags", null=True)
+    timestamp = models.DateTimeField(default=timezone.now, null=True)
 
     def __str__(self):
         return self.b_name
+
+    def formatted_date(self):
+        return self.timestamp.strftime("%B %d, %Y")
 
     def save(self, *args, **kwargs):
         if self.b_pic:
             self.b_pic = optimize_image(self.b_pic, 500)
 
         super().save(*args, **kwargs)
+
+    def get_tags(self):
+        if self.tags:
+            return self.tags.split(",")
+        else:
+            return []
+
 
 
 # Email contact from users
