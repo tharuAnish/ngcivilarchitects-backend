@@ -53,7 +53,7 @@ class Services(models.Model):
         return self.s_name
 
     def save(self, *args, **kwargs):
-        if self.s_pic:
+        if self.s_pic and not self.pk:
             self.s_pic = optimize_image(self.s_pic, 350)
 
         super().save(*args, **kwargs)
@@ -70,7 +70,7 @@ class Testimonials(models.Model):
         return self.client_name
 
     def save(self, *args, **kwargs):
-        if self.client_pic:
+        if self.client_pic and not self.pk:
             self.client_pic = optimize_image(self.client_pic, 200)
 
         super().save(*args, **kwargs)
@@ -94,7 +94,7 @@ class Team(models.Model):
         return self.staff_name
 
     def save(self, *args, **kwargs):
-        if self.staff_pic:
+        if self.staff_pic and not self.pk:
             self.staff_pic = optimize_image(self.staff_pic, 350)
 
         super().save(*args, **kwargs)
@@ -118,7 +118,7 @@ class Project(models.Model):
         return self.p_name
 
     def save(self, *args, **kwargs):
-        if self.p_pic:
+        if self.p_pic and not self.pk:
             self.p_pic = optimize_image(self.p_pic, 500)
 
         super().save(*args, **kwargs)
@@ -141,7 +141,7 @@ class Blog(models.Model):
         return self.timestamp.strftime("%B %d, %Y")
 
     def save(self, *args, **kwargs):
-        if self.b_pic:
+        if self.b_pic and not self.pk:
             self.b_pic = optimize_image(self.b_pic, 500)
 
         super().save(*args, **kwargs)
