@@ -207,10 +207,10 @@ JAZZMIN_SETTINGS = {
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'mail.ngcivilarchitects.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'testmail7615@gmail.com'
-EMAIL_HOST_PASSWORD = 'argyexdultsqlgdd'
+EMAIL_HOST_USER = 'contact@ngcivilarchitects.com'
+EMAIL_HOST_PASSWORD = '$NG_contact@706'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = 'testmail7615@gmail.com'
+DEFAULT_FROM_EMAIL = 'contact@ngcivilarchitects.com'

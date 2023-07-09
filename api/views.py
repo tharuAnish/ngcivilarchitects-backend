@@ -196,12 +196,11 @@ def contact(request):
                     msg1,
                      text_content,
                     settings.EMAIL_HOST_USER,
-                    ['namoanishtharu@gmail.com','testmail7615@gmail.com',contact.email]
+                    ['namoanishtharu@gmail.com','erjuniorsanjip@gmail.com','contact@ngcivilarchitects.com',contact.email]
                     )
             print('Sending Email')
             email.attach_alternative(html_content, "text/html")
             datathread(email).start()
-           
             return Response({'message': 'Thank you for contacting us! We will get back to you soon.'})
 
     return Response({'error': 'Invalid form data.'}, status=status.HTTP_400_BAD_REQUEST)
