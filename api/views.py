@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer,blogSerializer, contactSerializer
-from .models import Services, Testimonials, Team, Project, Blog
+from .serializers import serviceSerializer,testimonialSerializer,teamSerializer,projectSerializer, courseSerializer,blogSerializer, contactSerializer
+from .models import Services, Testimonials, Team, Project, Blog, Course, Contact
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -144,6 +144,40 @@ class projectApiView(APIView):
             context["project"] = form.data
             return Response(context, status=status.HTTP_200_OK)
         
+# Course
+class courseAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, course_id=None):
+        if course_id is not None:
+            try:
+                course = Course.objects.get(id=course_id)
+                context = {
+                    "course": courseSerializer(course).data
+                }
+                return Response(context, status=status.HTTP_200_OK)
+            except Course.DoesNotExist:
+                return Response({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        courses = Course.objects.all()
+        context = {
+            "courses": courseSerializer(courses, many=True).data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+        form = courseSerializer(data=data)
+        if not form.is_valid():
+            return Response({'error': True, 'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            form.save()
+            context = {
+                "course": form.data
+            }
+            return Response(context, status=status.HTTP_200_OK)
+
+        
 # Blog
 class blogApiView(APIView):
     permission_classes = (AllowAny,)
@@ -194,13 +228,14 @@ def contact(request):
             text_content = strip_tags(html_content)
             email = EmailMultiAlternatives(
                     msg1,
-                     text_content,
+                    text_content,
                     settings.EMAIL_HOST_USER,
                     ['namoanishtharu@gmail.com','erjuniorsanjip@gmail.com','contact@ngcivilarchitects.com',contact.email]
                     )
             print('Sending Email')
             email.attach_alternative(html_content, "text/html")
-            datathread(email).start()
+            # datathread(email).start()
+            email.send()    
             return Response({'message': 'Thank you for contacting us! We will get back to you soon.'})
 
     return Response({'error': 'Invalid form data.'}, status=status.HTTP_400_BAD_REQUEST)

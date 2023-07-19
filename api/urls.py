@@ -10,6 +10,9 @@ urlpatterns = [
     path("api/testimonials/", testimonialApiView.as_view()),
     path("api/team/", teamApiView.as_view()),
     path("api/project/", projectApiView.as_view()),
+    path("api/course/", courseAPIView.as_view()),
+    # Endpoint for fetching a specific blog by ID
+    path("api/course/<int:course_id>/", courseAPIView.as_view(), name="course-detail"),
     path("api/blog/", blogApiView.as_view()),
     # Endpoint for fetching a specific blog by ID
     path("api/blog/<int:blog_id>/", blogApiView.as_view(), name="blog-detail"),

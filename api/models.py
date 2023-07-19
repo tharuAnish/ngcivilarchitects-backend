@@ -123,6 +123,26 @@ class Project(models.Model):
 
         super().save(*args, **kwargs)
 
+# Course
+class Course(models.Model):
+    c_name = models.CharField(max_length=400)
+    c_rank = models.IntegerField(default=0)
+    c_tags = models.CharField(max_length=120,  help_text="Comma-separated tags", null=True)
+    c_pic = models.ImageField(upload_to="media/courseimage")
+    c_desc = RichTextField(null=True)
+    c_overview = RichTextField(null=True)
+   
+    
+
+    def __str__(self):
+        return self.c_name
+
+    def save(self, *args, **kwargs):
+        if self.c_pic and not self.pk:
+            self.c_pic = optimize_image(self.c_pic, 350)
+
+        super().save(*args, **kwargs)
+
 # Blog
 class Blog(models.Model):
     b_name = models.CharField(max_length=400)
