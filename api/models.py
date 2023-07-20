@@ -2,14 +2,13 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
-from PIL import Image
+from PIL import Image as PilImage
 from django.utils import timezone
-from datetime import datetime
 
 # Helper function to resize and optimize images
 def optimize_image(image_field, new_height):
     # Open the uploaded image using Pillow
-    image = Image.open(image_field)
+    image = PilImage.open(image_field)
 
     # Calculate the new width while maintaining the aspect ratio
     width, height = image.size
@@ -40,7 +39,6 @@ def optimize_image(image_field, new_height):
 
     return optimized_image
 
-
 # Services
 class Services(models.Model):
     s_name = models.CharField(max_length=400)
@@ -53,11 +51,10 @@ class Services(models.Model):
         return self.s_name
 
     def save(self, *args, **kwargs):
-        if self.s_pic and not self.pk:
+        if self.s_pic:
             self.s_pic = optimize_image(self.s_pic, 350)
 
         super().save(*args, **kwargs)
-
 
 # Testimonials
 class Testimonials(models.Model):
@@ -70,11 +67,10 @@ class Testimonials(models.Model):
         return self.client_name
 
     def save(self, *args, **kwargs):
-        if self.client_pic and not self.pk:
+        if self.client_pic:
             self.client_pic = optimize_image(self.client_pic, 200)
 
         super().save(*args, **kwargs)
-
 
 # Team
 class Team(models.Model):
@@ -94,11 +90,10 @@ class Team(models.Model):
         return self.staff_name
 
     def save(self, *args, **kwargs):
-        if self.staff_pic and not self.pk:
+        if self.staff_pic:
             self.staff_pic = optimize_image(self.staff_pic, 400)
 
         super().save(*args, **kwargs)
-
 
 # Project
 class Project(models.Model):
@@ -118,7 +113,7 @@ class Project(models.Model):
         return self.p_name
 
     def save(self, *args, **kwargs):
-        if self.p_pic and not self.pk:
+        if self.p_pic:
             self.p_pic = optimize_image(self.p_pic, 500)
 
         super().save(*args, **kwargs)
@@ -132,13 +127,11 @@ class Course(models.Model):
     c_desc = RichTextField(null=True)
     c_overview = RichTextField(null=True)
    
-    
-
     def __str__(self):
         return self.c_name
 
     def save(self, *args, **kwargs):
-        if self.c_pic and not self.pk:
+        if self.c_pic:
             self.c_pic = optimize_image(self.c_pic, 350)
 
         super().save(*args, **kwargs)
@@ -161,7 +154,7 @@ class Blog(models.Model):
         return self.timestamp.strftime("%B %d, %Y")
 
     def save(self, *args, **kwargs):
-        if self.b_pic and not self.pk:
+        if self.b_pic:
             self.b_pic = optimize_image(self.b_pic, 500)
 
         super().save(*args, **kwargs)
@@ -172,10 +165,7 @@ class Blog(models.Model):
         else:
             return []
 
-
-
 # Email contact from users
-
 class Contact(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
