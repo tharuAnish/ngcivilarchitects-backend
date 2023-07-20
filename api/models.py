@@ -95,7 +95,7 @@ class Team(models.Model):
 
     def save(self, *args, **kwargs):
         if self.staff_pic and not self.pk:
-            self.staff_pic = optimize_image(self.staff_pic, 350)
+            self.staff_pic = optimize_image(self.staff_pic, 400)
 
         super().save(*args, **kwargs)
 
